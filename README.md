@@ -160,15 +160,15 @@ Customer limitations:
 
 ## 7. System Architecture
 
-Cubed can be built using a standard web architecture with a frontend, backend/API layer, database, and image storage service.
+Cubed is scaffolded as a Next.js application with Supabase as the backend platform.
 
 ### Suggested Tech Stack
 
-- Frontend: React or Next.js
-- Backend: Node.js + Express, or Next.js API routes
-- Database: PostgreSQL or Supabase
-- Image Storage: Supabase Storage or Cloudinary
-- Deployment: Vercel, Render, or Railway
+- Frontend: Next.js
+- Backend: Next.js route handlers and server actions
+- Database: Supabase Postgres
+- Image Storage: Supabase Storage
+- Deployment: Vercel
 
 ### High-Level Architecture
 
@@ -176,21 +176,19 @@ Cubed can be built using a standard web architecture with a frontend, backend/AP
 Customer / Merchant / Admin
           |
           v
-Frontend Web App (React / Next.js)
+Next.js Web App
           |
-          v
-Backend API / Server
-          |
+          +--> App Router Pages
+          +--> Route Handlers / Server Actions
           +--> Authentication & Role Access
-          +--> Product Management
-          +--> Merchant Management
-          +--> Order Reservation Logic
+          +--> Product and Merchant Management
+          +--> Pickup Order Reservation Logic
           |
           v
-Database (PostgreSQL / Supabase)
-          |
-          v
-Image Storage (Supabase Storage / Cloudinary)
+Supabase
+  +--> Postgres Database
+  +--> Storage Buckets
+  +--> Auth Integration
 ```
 
 ### Recommended Modules
@@ -372,14 +370,13 @@ The work split below keeps responsibilities clear and reduces overlap.
 
 ## 10. Installation Guide
 
-The project structure may vary depending on the final stack, but the setup below is a good default for a modern JavaScript web application.
+The project uses Next.js with TypeScript and is prepared for Supabase integration.
 
 ### Prerequisites
 
 - Node.js 18+
 - npm, pnpm, or yarn
-- PostgreSQL or Supabase project
-- Cloud image storage account if applicable
+- Supabase project
 
 ### Basic Setup
 
@@ -399,12 +396,12 @@ npm install
 3. Create an environment file:
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
-4. Configure environment variables.
+4. Configure the Supabase environment variables.
 
-5. Run database migrations or initialize schema.
+5. Create your Supabase tables and storage bucket.
 
 6. Start the development server:
 
@@ -414,39 +411,27 @@ npm run dev
 
 ### Suggested Initial Setup Tasks
 
-- Create database tables
+- Create Supabase tables
 - Seed categories
 - Create a super admin account
-- Configure storage bucket for product images
+- Configure Supabase Storage for product images
 - Test product creation and reservation flow
 
 ## 11. Environment Variables
 
-Below is a suggested environment variable list. Adjust it based on the chosen stack.
+Below is the current environment variable list for the Next.js + Supabase starter.
 
 ```env
-NODE_ENV=development
-PORT=3000
-
-DATABASE_URL=
-
-JWT_SECRET=
-
-NEXT_PUBLIC_APP_URL=
-
-SUPABASE_URL=
-SUPABASE_ANON_KEY=
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
 ```
 
 ### Notes
 
-- Use either Supabase or another database provider depending on the chosen stack.
-- Use either Supabase Storage or Cloudinary for images.
+- `NEXT_PUBLIC_` variables are safe for client-side Supabase usage.
+- `SUPABASE_SERVICE_ROLE_KEY` must only be used on the server.
 - Keep all secrets out of source control.
 
 ## 12. Folder Structure
@@ -455,10 +440,14 @@ This is a suggested structure for a clean and maintainable codebase.
 
 ```text
 cubed/
-├── public/
 ├── src/
+│   ├── app/
+│   │   ├── admin/
+│   │   ├── merchant/
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
 │   ├── components/
-│   ├── pages/ or app/
 │   ├── layouts/
 │   ├── features/
 │   │   ├── auth/
@@ -466,24 +455,19 @@ cubed/
 │   │   ├── merchants/
 │   │   ├── cart/
 │   │   ├── orders/
-│   │   └── dashboard/
+│   │   ├── admin/
+│   │   ├── customer/
+│   │   └── merchant/
 │   ├── services/
 │   ├── lib/
-│   ├── hooks/
-│   ├── utils/
-│   ├── styles/
 │   └── types/
-├── server/
-│   ├── controllers/
-│   ├── routes/
-│   ├── middleware/
-│   ├── services/
-│   └── validators/
-├── database/
+├── supabase/
 │   ├── migrations/
-│   └── seeders/
-├── .env
+│   └── seed.sql
 ├── .env.example
+├── .env.local
+├── next.config.mjs
+├── next-env.d.ts
 ├── package.json
 └── README.md
 ```
@@ -510,3 +494,209 @@ MIT License
 ```
 
 If needed, add a separate `LICENSE` file to the repository.
+
+## 15. Project Structure
+
+This section explains what each folder and important file is for, and what should go inside it.
+
+```text
+cubed/
+├── README.md
+├── package.json
+├── next.config.mjs
+├── next-env.d.ts
+├── tsconfig.json
+├── .env.example
+├── .env.local
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── admin/page.tsx
+│   │   ├── merchant/page.tsx
+│   │   └── globals.css
+│   ├── components/
+│   ├── layouts/
+│   ├── features/
+│   ├── lib/
+│   ├── pages/
+│   ├── services/
+│   ├── styles/
+│   └── types/
+└── supabase/
+    ├── migrations/
+    └── seed.sql
+```
+
+### Root Files
+
+- `README.md`: main project overview and team guidance
+- `package.json`: dependencies, scripts, and project metadata
+- `next.config.mjs`: Next.js configuration
+- `next-env.d.ts`: Next.js TypeScript support file
+- `tsconfig.json`: TypeScript configuration and path aliases
+- `.env.example`: sample environment variables for new developers
+- `.env.local`: local secrets and Supabase keys, not committed
+
+### `src/app/`
+
+This is the Next.js App Router area. It contains the actual route files and global app layout.
+
+- `layout.tsx`: shared app shell, metadata, theme provider, and global layout wrapper
+- `page.tsx`: customer-facing homepage and entry point
+- `admin/page.tsx`: store owner dashboard entry page
+- `merchant/page.tsx`: merchant dashboard entry page
+- `globals.css`: app-wide theme tokens, layout styles, and shared component styles
+
+What should go here:
+
+- Page routes
+- Route layouts
+- Global styling
+- Shared app wrappers
+
+### `src/components/`
+
+Reusable UI components that can be used across pages and features.
+
+Current files:
+
+- `theme/ThemeProvider.tsx`: applies the active theme to the app
+- `theme/ThemeToggle.tsx`: light and dark mode switch
+- `theme/ThemeSwatches.tsx`: palette preview component
+- `dashboard/DashboardPlaceholder.tsx`: reusable placeholder for dashboard routes
+
+What should go here:
+
+- Buttons
+- Cards
+- Modals
+- Tables
+- Shared UI elements that are not tied to one feature only
+
+### `src/layouts/`
+
+Layout wrappers for sections of the app.
+
+Current file:
+
+- `AppShell.tsx`: top navigation, role links, and shared page container
+
+What should go here:
+
+- App shell layouts
+- Sidebar layouts
+- Header and footer wrappers
+- Shared page structure components
+
+### `src/features/`
+
+Feature-based folders for business logic and UI grouped by domain.
+
+Current folders:
+
+- `auth/`: login, sessions, protected route helpers
+- `products/`: product forms, queries, validation, and product UI logic
+- `cart/`: cart state and reservation flow logic
+- `orders/`: pickup order logic and admin order actions
+- `customer/`: customer-facing feature notes and modules
+- `merchant/`: merchant-facing feature notes and modules
+- `merchants/`: merchant CRUD and merchant data handling
+- `admin/`: store owner feature notes and admin modules
+
+What should go here:
+
+- Feature-specific components
+- Feature-specific hooks
+- Feature-specific utilities
+- Business rules tied to one domain
+
+### `src/lib/`
+
+Shared low-level helpers used by multiple parts of the app.
+
+Current files:
+
+- `supabase/client.ts`: browser Supabase client
+- `supabase/server.ts`: server-side Supabase client
+
+What should go here:
+
+- API clients
+- Shared utility functions
+- Database helpers
+- Auth helpers
+
+### `src/pages/`
+
+This folder is used for page documentation and planning notes, not for active Next.js routes in this setup.
+
+Current file:
+
+- `README.md`: page ownership and route guidance for the team
+
+What should go here:
+
+- Page planning notes
+- Route ownership breakdowns
+- Handoff checklists
+
+### `src/services/`
+
+Shared service-level documentation and future service helpers.
+
+Current file:
+
+- `README.md`: placeholder guidance for service layer usage
+
+What should go here:
+
+- HTTP services
+- API wrappers
+- Data-fetching services
+
+### `src/styles/`
+
+Style system notes and design guidance for the team.
+
+Current file:
+
+- `README.md`: color system, typography rules, dark mode rules, and layout guidance
+
+What should go here:
+
+- Styling documentation
+- Design tokens
+- Layout rules
+- Theme guidance
+
+### `src/types/`
+
+Shared TypeScript types and interfaces.
+
+Current file:
+
+- `README.md`: placeholder guidance for shared type definitions
+
+What should go here:
+
+- Database row types
+- API response types
+- Component prop types
+- Shared enums and interfaces
+
+### `supabase/`
+
+Database and seed setup for Supabase.
+
+Current files:
+
+- `migrations/`: SQL migration files for table creation and changes
+- `seed.sql`: starter seed data, such as categories
+
+What should go here:
+
+- SQL migrations
+- Seed scripts
+- Row-level security policies
+- Table and storage setup scripts
