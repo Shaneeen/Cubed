@@ -4,9 +4,9 @@ import { AppShell } from "@/layouts/AppShell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Cubed",
+  title: "Monkey",
   description:
-    "Retail cube space management for store owners, merchants, and pickup order reservations.",
+    "Monkey Monkey Monkey",
 };
 
 export default function RootLayout({
