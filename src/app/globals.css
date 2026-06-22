@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   color-scheme: light;
   --font-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
@@ -298,5 +302,39 @@ h3 {
   .grid-3,
   .swatch-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/*
+  shadcn/ui tokens, aliased onto the existing palette above instead of
+  redefining --primary/--secondary/--accent/--border (would collide).
+*/
+@layer base {
+  :root {
+    --background: var(--bg);
+    --foreground: var(--text);
+    --card: var(--surface);
+    --card-foreground: var(--text);
+    --popover: var(--surface);
+    --popover-foreground: var(--text);
+    --primary-foreground: #ffffff;
+    --secondary-foreground: var(--text);
+    --muted: var(--surface-soft);
+    --muted-foreground: var(--text-muted);
+    --accent-foreground: var(--text);
+    --destructive: #d64545;
+    --destructive-foreground: #ffffff;
+    --input: var(--border);
+    --ring: var(--primary);
+    --radius: 1rem;
+  }
+  [data-theme="dark"] {
+    --destructive: #ef6f6f;
+  }
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply font-sans;
   }
 }
