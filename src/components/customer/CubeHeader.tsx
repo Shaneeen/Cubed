@@ -5,9 +5,9 @@ import type { Cube } from "@/types/cube";
 
 export function CubeHeader({ cube, storeId }: { cube: Cube; storeId: string }) {
   return (
-    <header className="relative overflow-hidden rounded-[28px] border border-border bg-bg-elevated p-6 shadow-theme backdrop-blur-xl sm:p-8">
-      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent/30 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-secondary/20 blur-3xl" />
+    <header className="relative mx-auto overflow-hidden rounded-[28px] border border-border bg-bg-elevated p-6 shadow-theme backdrop-blur-xl sm:p-8 lg:p-10">
+      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent/30 blur-3xl lg:h-64 lg:w-64" />
+      <div className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-secondary/20 blur-3xl lg:h-64 lg:w-64" />
 
       <Link
         href={`/store/${storeId}`}
@@ -17,14 +17,14 @@ export function CubeHeader({ cube, storeId }: { cube: Cube; storeId: string }) {
         Back to store
       </Link>
 
-      <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center">
+      <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center lg:gap-7">
         {cube.logo && (
-          <div className="size-16 shrink-0 overflow-hidden rounded-2xl border border-border bg-surface shadow-theme sm:size-20">
+          <div className="size-16 shrink-0 overflow-hidden rounded-2xl border border-border bg-surface shadow-theme sm:size-20 lg:size-24">
             <Image
               src={cube.logo}
               alt={`${cube.merchantName} logo`}
-              width={80}
-              height={80}
+              width={96}
+              height={96}
               className="size-full object-cover"
             />
           </div>
@@ -32,17 +32,17 @@ export function CubeHeader({ cube, storeId }: { cube: Cube; storeId: string }) {
 
         <div className="space-y-1">
           {cube.tagline && (
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary-strong">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary-strong lg:text-sm">
               {cube.tagline}
             </p>
           )}
-          <h1 className="text-3xl font-semibold tracking-tight text-text sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-text sm:text-4xl lg:text-5xl">
             {cube.merchantName}
           </h1>
         </div>
       </div>
 
-      <p className="relative z-10 mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-text-muted">
+      <p className="relative z-10 mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-text-muted lg:max-w-3xl lg:text-base">
         {cube.about}
       </p>
     </header>

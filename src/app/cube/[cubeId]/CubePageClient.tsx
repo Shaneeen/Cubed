@@ -24,17 +24,17 @@ export function CubePageClient({ cube, storeId }: { cube: Cube; storeId: string 
   const activeProduct = cube.products.find((p) => p.id === activeProductId) ?? null;
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-6xl space-y-6 sm:space-y-8 lg:space-y-10">
       <CubeHeader cube={cube} storeId={storeId} />
 
       <motion.div
         initial="hidden"
         animate="visible"
         variants={gridVariants}
-        className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+        className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5 xl:grid-cols-5"
       >
         {cube.products.map((product) => (
-          <motion.div key={product.id} variants={cardVariants}>
+          <motion.div key={product.id} variants={cardVariants} className="h-full">
             <ProductCard
               product={product}
               currency={product.currency}

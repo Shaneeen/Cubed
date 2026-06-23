@@ -8,6 +8,16 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        // Original Wix URL was misspelled ("tiral"); preserved for SEO.
+        source: "/one-month-tiral",
+        destination: "/one-month-trial",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
