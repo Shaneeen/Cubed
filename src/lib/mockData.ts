@@ -11,6 +11,7 @@ export const mockStore: Store = {
     {
       id: "aurelia-jewelry",
       merchantName: "Aurelia",
+      outletIds: ["tampines-hub", "pasir-ris-mall"],
       tagline: "Handmade fine jewelry, small batch",
       about:
         "Aurelia crafts every piece in-house using recycled gold and ethically sourced stones. Each cube rotation features a limited run of one-of-a-kind designs.",
@@ -88,6 +89,7 @@ export const mockStore: Store = {
     {
       id: "kobo-ceramics",
       merchantName: "Kobo Ceramics",
+      outletIds: ["tampines-hub"],
       tagline: "Stoneware for everyday rituals",
       about:
         "Kobo throws every piece by hand on a small wheel studio nearby. Glazes are mixed in-house, so colour and texture vary slightly between pieces — that's the point.",
@@ -148,6 +150,7 @@ export const mockStore: Store = {
     {
       id: "fernweh-apparel",
       merchantName: "Fernweh",
+      outletIds: ["pasir-ris-mall", "woodleigh-mall"],
       tagline: "Travel-ready basics, cut to last",
       about:
         "Fernweh designs versatile layers for people who live out of a carry-on. Fabrics are chosen for packability and durability over trend cycles.",
@@ -220,6 +223,7 @@ export const mockStore: Store = {
     {
       id: "verdant-botanicals",
       merchantName: "Verdant Botanicals",
+      outletIds: ["pasir-ris-mall"],
       tagline: "Small-batch skincare, cold-pressed",
       about:
         "Verdant formulates every batch by hand using cold-press extraction to preserve actives. Bottled and labeled the same week it's made.",
@@ -279,6 +283,7 @@ export const mockStore: Store = {
     {
       id: "northpeak-coffee",
       merchantName: "Northpeak Coffee",
+      outletIds: ["woodleigh-mall", "tampines-hub"],
       tagline: "Single-origin beans, roasted weekly",
       about:
         "Northpeak roasts in small batches every week and sells out fast. Beans are sourced directly from smallholder farms across three regions.",

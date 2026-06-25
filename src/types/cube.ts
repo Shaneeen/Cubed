@@ -23,6 +23,8 @@ export interface Cube {
   tagline?: string;
   about: string;
   logo?: string;
+  /** Many-to-many: a merchant's cube can be present at multiple outlets. */
+  outletIds?: string[];
   products: Product[];
 }
 

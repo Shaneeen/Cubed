@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const siteLinks = [
-  { href: "/aboutus", label: "About Us" },
+  { href: "/about", label: "About & Contact" },
+  { href: "/products", label: "Products" },
   { href: "/sprout-a-cube", label: "Sprout a Cube" },
   { href: "/events", label: "Events" },
-  { href: "/copy-of-c-o-n-t-a-c-t", label: "Contact Us" },
   { href: "/faq", label: "FAQ" },
 ];
 
