@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, ShoppingBag, Sparkles, Tags } from "lucide-react";
+import { Check, MapPin } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { useOutlet } from "@/context/OutletContext";
+import { outlets } from "@/lib/outlets";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -15,15 +16,10 @@ const navLinks = [
   { href: "/about", label: "About & Contact" },
 ];
 
-const productCategories = [
-  { label: "Handmade", icon: Sparkles },
-  { label: "Accessories", icon: Tags },
-  { label: "Home Decor", icon: ShoppingBag },
-];
-
 export function MarketingNav() {
   const pathname = usePathname() ?? "/";
-  const { selectedOutlet, openSelector } = useOutlet();
+  const router = useRouter();
+  const { selectedOutlet, setSelectedOutlet, openSelector } = useOutlet();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -85,16 +81,29 @@ export function MarketingNav() {
                       onMouseEnter={openPreview}
                       onMouseLeave={scheduleClosePreview}
                     >
-                      {productCategories.map((category) => (
-                        <Link
-                          key={category.label}
-                          href="/products"
-                          className="nav-preview-item"
-                        >
-                          <category.icon size={16} />
-                          {category.label}
-                        </Link>
-                      ))}
+                      {outlets.map((outlet) => {
+                        const isCurrent = outlet.id === selectedOutlet?.id;
+                        return (
+                          <button
+                            key={outlet.id}
+                            type="button"
+                            className={
+                              isCurrent
+                                ? "nav-preview-item nav-preview-item-active"
+                                : "nav-preview-item"
+                            }
+                            onClick={() => {
+                              setSelectedOutlet(outlet.id);
+                              setPreviewOpen(false);
+                              router.push("/products");
+                            }}
+                          >
+                            <MapPin size={16} />
+                            {outlet.name}
+                            {isCurrent && <Check size={14} className="nav-preview-check" />}
+                          </button>
+                        );
+                      })}
                     </motion.div>
                   )}
                 </AnimatePresence>

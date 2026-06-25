@@ -6,14 +6,13 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const links = [
   { href: "/dev", label: "Dev Demo" },
-  { href: "/merchant", label: "Merchant" },
   { href: "/admin", label: "Admin" },
 ];
 
-// Marketing pages (the Cube Sprout site at "/") render their own
-// MarketingNav, which already includes a theme toggle — skip the dev
-// topbar there so the page doesn't end up with two headers.
-const dashboardPrefixes = ["/dev", "/merchant", "/admin"];
+// Marketing pages (the Cube Sprout site at "/") and the Merchant Portal
+// (/merchant) render their own nav headers — skip the dev topbar there so
+// the page doesn't end up with two headers.
+const dashboardPrefixes = ["/dev", "/admin"];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
