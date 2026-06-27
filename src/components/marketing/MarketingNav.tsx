@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, MapPin } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useOutlet } from "@/context/OutletContext";
-import { outlets } from "@/lib/outlets";
 import { useAuth } from "@/features/auth/AuthContext";
 
 const navLinks = [
@@ -19,7 +18,7 @@ const navLinks = [
 export function MarketingNav() {
   const pathname = usePathname() ?? "/";
   const router = useRouter();
-  const { selectedOutlet, setSelectedOutlet, openSelector } = useOutlet();
+  const { outlets, selectedOutlet, setSelectedOutlet, openSelector } = useOutlet();
   const { profile, user, signOut } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -61,6 +60,7 @@ export function MarketingNav() {
       : profile?.role === "merchant"
         ? "Merchant Portal"
         : "Login";
+  const hasPublicOutlets = outlets.length > 0;
 
   return (
     <>
@@ -72,7 +72,7 @@ export function MarketingNav() {
 
         <nav className="site-header-nav" aria-label="Cube Sprout">
           {navLinks.map((link) =>
-            link.href === "/products" ? (
+            link.href === "/products" && hasPublicOutlets ? (
               <div
                 key={link.href}
                 className="nav-preview-wrap"
@@ -150,10 +150,12 @@ export function MarketingNav() {
         </nav>
 
         <div className="site-header-actions">
-          <button type="button" className="switch-outlet-btn" onClick={openSelector}>
-            <MapPin size={14} />
-            {selectedOutlet ? selectedOutlet.name : "Switch outlet"}
-          </button>
+          {hasPublicOutlets && (
+            <button type="button" className="switch-outlet-btn" onClick={openSelector}>
+              <MapPin size={14} />
+              {selectedOutlet ? selectedOutlet.name : "Switch outlet"}
+            </button>
+          )}
           <ThemeToggle />
           <button
             type="button"
@@ -219,17 +221,19 @@ export function MarketingNav() {
             Login
           </Link>
         )}
-        <button
-          type="button"
-          className="switch-outlet-btn"
-          onClick={() => {
-            openSelector();
-            setMobileOpen(false);
-          }}
-        >
-          <MapPin size={14} />
-          {selectedOutlet ? selectedOutlet.name : "Switch outlet"}
-        </button>
+        {hasPublicOutlets && (
+          <button
+            type="button"
+            className="switch-outlet-btn"
+            onClick={() => {
+              openSelector();
+              setMobileOpen(false);
+            }}
+          >
+            <MapPin size={14} />
+            {selectedOutlet ? selectedOutlet.name : "Switch outlet"}
+          </button>
+        )}
       </div>
     </>
   );

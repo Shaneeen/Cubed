@@ -1,12 +1,15 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { getOutletById, type Outlet } from "@/lib/outlets";
+import { fetchPublicOutlets, type Outlet } from "@/lib/outlets";
 
 const storageKey = "cubed-selected-outlet";
 
 interface OutletContextValue {
+  outlets: Outlet[];
   selectedOutlet: Outlet | undefined;
+  isLoadingOutlets: boolean;
+  outletError: string | null;
   isSelectorOpen: boolean;
   hasExistingSelection: boolean;
   setSelectedOutlet: (...args: [string]) => void;
@@ -17,18 +20,45 @@ interface OutletContextValue {
 const OutletContext = createContext<OutletContextValue | undefined>(undefined);
 
 export function OutletProvider({ children }: { children: React.ReactNode }) {
+  const [outlets, setOutlets] = useState<Outlet[]>([]);
   const [selectedOutletId, setSelectedOutletId] = useState<string | undefined>(undefined);
+  const [isLoadingOutlets, setIsLoadingOutlets] = useState(true);
+  const [outletError, setOutletError] = useState<string | null>(null);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [hasExistingSelection, setHasExistingSelection] = useState(false);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(storageKey);
-    if (stored && getOutletById(stored)) {
-      setSelectedOutletId(stored);
-      setHasExistingSelection(true);
-    } else {
-      setIsSelectorOpen(true);
+    let cancelled = false;
+
+    async function loadOutlets() {
+      try {
+        const publicOutlets = await fetchPublicOutlets();
+        if (cancelled) return;
+
+        setOutlets(publicOutlets);
+
+        const stored = window.localStorage.getItem(storageKey);
+        if (stored && publicOutlets.some((outlet) => outlet.id === stored)) {
+          setSelectedOutletId(stored);
+          setHasExistingSelection(true);
+        } else {
+          window.localStorage.removeItem(storageKey);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setOutletError(error instanceof Error ? error.message : "Unable to load outlets.");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoadingOutlets(false);
+        }
+      }
     }
+
+    loadOutlets();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function setSelectedOutlet(id: string) {
@@ -41,7 +71,10 @@ export function OutletProvider({ children }: { children: React.ReactNode }) {
   return (
     <OutletContext.Provider
       value={{
-        selectedOutlet: getOutletById(selectedOutletId),
+        outlets,
+        selectedOutlet: outlets.find((outlet) => outlet.id === selectedOutletId),
+        isLoadingOutlets,
+        outletError,
         isSelectorOpen,
         hasExistingSelection,
         setSelectedOutlet,

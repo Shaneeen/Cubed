@@ -5,40 +5,40 @@
 :root {
   color-scheme: light;
   --font-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --bg: #f4fbff;
-  --bg-elevated: rgba(255, 255, 255, 0.88);
-  --bg-accent: #dff5ff;
+  --bg: #f4f4f2;
+  --bg-elevated: rgba(255, 255, 255, 0.82);
+  --bg-accent: #e7e7e3;
   --surface: #ffffff;
-  --surface-soft: #edf7ff;
-  --text: #1c2950;
-  --text-muted: #57698f;
-  --border: rgba(78, 122, 191, 0.18);
-  --primary: #4e7abf;
-  --primary-strong: #3e59a1;
-  --secondary: #5493cb;
-  --accent: #99f6ff;
-  --accent-soft: #b4c1ff;
-  --shadow: 0 24px 60px rgba(62, 89, 161, 0.12);
+  --surface-soft: #eeeeeb;
+  --text: #111111;
+  --text-muted: #636363;
+  --border: rgba(17, 17, 17, 0.14);
+  --primary: #111111;
+  --primary-strong: #000000;
+  --secondary: #2b2b2b;
+  --accent: #ffffff;
+  --accent-soft: #d9d9d4;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
   --header-bg: rgba(255, 255, 255, 0.85);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0e1630;
-  --bg-elevated: rgba(18, 29, 59, 0.9);
-  --bg-accent: #132247;
-  --surface: #162347;
-  --surface-soft: #1b2c57;
-  --text: #eef4ff;
-  --text-muted: #b7c8ef;
-  --border: rgba(170, 206, 255, 0.16);
-  --primary: #99f6ff;
-  --primary-strong: #9bd9f0;
-  --secondary: #4e7abf;
-  --accent: #b4c1ff;
-  --accent-soft: #3e59a1;
-  --shadow: 0 28px 70px rgba(0, 0, 0, 0.34);
-  --header-bg: rgba(15, 17, 23, 0.85);
+  --bg: #050505;
+  --bg-elevated: rgba(255, 255, 255, 0.08);
+  --bg-accent: #151515;
+  --surface: rgba(255, 255, 255, 0.08);
+  --surface-soft: rgba(255, 255, 255, 0.06);
+  --text: #f7f7f5;
+  --text-muted: rgba(247, 247, 245, 0.62);
+  --border: rgba(255, 255, 255, 0.15);
+  --primary: #f7f7f5;
+  --primary-strong: #f7f7f5;
+  --secondary: #202020;
+  --accent: rgba(255, 255, 255, 0.18);
+  --accent-soft: rgba(255, 255, 255, 0.1);
+  --shadow: 0 28px 70px rgba(0, 0, 0, 0.44);
+  --header-bg: rgba(12, 12, 12, 0.74);
 }
 
 :root,
@@ -55,9 +55,9 @@
   --radius-md: 1rem;
   --radius-lg: 1.75rem;
 
-  --shadow-sm: 0 4px 14px rgba(62, 89, 161, 0.1);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.1);
   --shadow-md: var(--shadow);
-  --shadow-lg: 0 32px 80px rgba(62, 89, 161, 0.18);
+  --shadow-lg: 0 32px 80px rgba(0, 0, 0, 0.18);
 
   --transition-fast: 150ms;
   --transition-base: 250ms;
@@ -84,8 +84,8 @@ body {
 body {
   font-family: var(--font-sans);
   background:
-    radial-gradient(circle at top left, rgba(153, 246, 255, 0.28), transparent 28%),
-    radial-gradient(circle at top right, rgba(180, 193, 255, 0.26), transparent 24%),
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(0, 0, 0, 0.08), transparent 24%),
     linear-gradient(180deg, var(--bg), var(--bg-accent));
   color: var(--text);
 }
@@ -210,8 +210,8 @@ h3 {
 }
 
 .button-primary {
-  background: linear-gradient(135deg, var(--secondary), var(--primary-strong));
-  color: white;
+  background: var(--text);
+  color: var(--bg);
 }
 
 .button-secondary,

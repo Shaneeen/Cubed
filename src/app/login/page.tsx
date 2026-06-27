@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
 function LoginForm() {
@@ -9,7 +8,6 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -126,7 +124,10 @@ export default function LoginPage() {
       <div className="section-head">
         <p className="eyebrow">Authentication</p>
         <h1>Sign In</h1>
-        <p className="section-copy">Log in to access your dashboard.</p>
+        <p className="section-copy">
+          Merchants will be sent to the Merchant Portal. Super admins will be
+          sent to the admin dashboard.
+        </p>
       </div>
 
       <LoginForm />

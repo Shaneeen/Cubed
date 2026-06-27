@@ -11,6 +11,24 @@ type MerchantCube = {
   outlets: { id: string; name: string } | null;
 };
 
+type CubesResponse = {
+  data: unknown;
+  error: { message: string } | null;
+};
+
+async function withTimeout<T>(promise: PromiseLike<T>, message: string): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(message)), 8000);
+  });
+
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
 export default function MerchantCubesPage() {
   const { profile, loading: authLoading, error } = useAuth();
   const [cubes, setCubes] = useState<MerchantCube[]>([]);
@@ -19,45 +37,57 @@ export default function MerchantCubesPage() {
   const [selectedOutlet, setSelectedOutlet] = useState<string>("all");
 
   useEffect(() => {
-    if (!profile) return;
+    if (!profile) {
+      if (!authLoading) setLoading(false);
+      return;
+    }
+
     const supabase = createBrowserSupabaseClient();
     const merchantId = profile.id;
 
     async function load() {
-      const { data, error: cubesError } = await supabase
-        .from("cubes")
-        .select("id, label, outlet_id, outlets(id, name)")
-        .eq("merchant_id", merchantId)
-        .order("label");
+      setLoading(true);
+      try {
+        const cubesRes = (await withTimeout(
+          supabase
+            .from("cubes")
+            .select("id, label, outlet_id, outlets(id, name)")
+            .eq("merchant_id", merchantId)
+            .order("label"),
+          "Cubes are taking too long to load. Check your Supabase tables and connection."
+        )) as CubesResponse;
 
-      if (cubesError) {
-        setLoadError("Unable to load your cubes.");
+        if (cubesRes.error) {
+          setLoadError(cubesRes.error.message);
+          return;
+        }
+
+        setCubes((cubesRes.data as MerchantCube[]) ?? []);
+        setLoadError(null);
+      } catch (loadError) {
+        setLoadError(loadError instanceof Error ? loadError.message : "Unable to load your cubes.");
+      } finally {
         setLoading(false);
-        return;
       }
-
-      setCubes((data as unknown as MerchantCube[]) ?? []);
-      setLoadError(null);
-      setLoading(false);
     }
 
-    load();
-  }, [profile]);
+    void load();
+  }, [profile, authLoading]);
 
-  if (authLoading || loading) return <p>Loading…</p>;
+  if (authLoading || loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   if (!profile) return <p>Profile not found.</p>;
 
   const outletMap = new Map<string, string>();
-  cubes.forEach((c) => {
-    if (c.outlets) outletMap.set(c.outlets.id, c.outlets.name);
+  cubes.forEach((cube) => {
+    if (cube.outlets) outletMap.set(cube.outlets.id, cube.outlets.name);
   });
   const outlets = Array.from(outletMap.entries()).map(([id, name]) => ({ id, name }));
 
   const filteredCubes =
     selectedOutlet === "all"
       ? cubes
-      : cubes.filter((c) => c.outlet_id === selectedOutlet);
+      : cubes.filter((cube) => cube.outlet_id === selectedOutlet);
 
   return (
     <div className="stack-lg">
@@ -70,7 +100,9 @@ export default function MerchantCubesPage() {
 
       {outlets.length > 1 && (
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <span style={{ fontSize: "0.85rem", color: "var(--text-muted)", whiteSpace: "nowrap" }}>Filter by outlet:</span>
+          <span style={{ fontSize: "0.85rem", color: "var(--text-muted)", whiteSpace: "nowrap" }}>
+            Filter by outlet:
+          </span>
           <div className="nav-tabs">
             <button
               onClick={() => setSelectedOutlet("all")}
@@ -79,16 +111,16 @@ export default function MerchantCubesPage() {
             >
               All ({cubes.length})
             </button>
-            {outlets.map((o) => {
-              const count = cubes.filter((c) => c.outlet_id === o.id).length;
+            {outlets.map((outlet) => {
+              const count = cubes.filter((cube) => cube.outlet_id === outlet.id).length;
               return (
                 <button
-                  key={o.id}
-                  onClick={() => setSelectedOutlet(o.id)}
-                  className={selectedOutlet === o.id ? "nav-tab nav-tab-active" : "nav-tab"}
+                  key={outlet.id}
+                  onClick={() => setSelectedOutlet(outlet.id)}
+                  className={selectedOutlet === outlet.id ? "nav-tab nav-tab-active" : "nav-tab"}
                   style={{ fontSize: "0.85rem", padding: "0.45rem 0.75rem" }}
                 >
-                  {o.name} ({count})
+                  {outlet.name} ({count})
                 </button>
               );
             })}
@@ -114,10 +146,10 @@ export default function MerchantCubesPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredCubes.map((c) => (
-                <tr key={c.id}>
-                  <td style={{ fontWeight: 600 }}>{c.label}</td>
-                  <td style={{ color: "var(--text-muted)" }}>{c.outlets?.name ?? "—"}</td>
+              {filteredCubes.map((cube) => (
+                <tr key={cube.id}>
+                  <td style={{ fontWeight: 600 }}>{cube.label}</td>
+                  <td style={{ color: "var(--text-muted)" }}>{cube.outlets?.name ?? "-"}</td>
                 </tr>
               ))}
             </tbody>

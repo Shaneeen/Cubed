@@ -1,5 +1,5 @@
-import { MerchantProductsOutletPicker } from "./MerchantProductsOutletPicker";
+import { MerchantProductsManager } from "./MerchantProductsManager";
 
 export default function MerchantProductsPage() {
-  return <MerchantProductsOutletPicker />;
+  return <MerchantProductsManager />;
 }

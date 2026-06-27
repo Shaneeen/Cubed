@@ -108,11 +108,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signOut() {
     const supabase = createBrowserSupabaseClient();
-    await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
-    setError(null);
-    window.location.href = "/login";
+    try {
+      await supabase.auth.signOut();
+      await fetch("/api/auth/signout", {
+        method: "POST",
+        cache: "no-store",
+      });
+    } finally {
+      for (const key of Object.keys(window.localStorage)) {
+        if (key.startsWith("sb-") && key.includes("auth-token")) {
+          window.localStorage.removeItem(key);
+        }
+      }
+
+      setUser(null);
+      setProfile(null);
+      setError(null);
+      window.location.replace("/login");
+    }
   }
 
   return (

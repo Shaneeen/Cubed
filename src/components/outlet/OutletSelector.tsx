@@ -2,11 +2,18 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Store } from "lucide-react";
-import { outlets } from "@/lib/outlets";
 import { useOutlet } from "@/context/OutletContext";
 
 export function OutletSelector() {
-  const { isSelectorOpen, hasExistingSelection, setSelectedOutlet, closeSelector } = useOutlet();
+  const {
+    outlets,
+    isLoadingOutlets,
+    outletError,
+    isSelectorOpen,
+    hasExistingSelection,
+    setSelectedOutlet,
+    closeSelector,
+  } = useOutlet();
 
   return (
     <AnimatePresence>
@@ -18,12 +25,12 @@ export function OutletSelector() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           onClick={(event) => {
-            if (hasExistingSelection && event.target === event.currentTarget) {
+            if ((hasExistingSelection || outlets.length === 0) && event.target === event.currentTarget) {
               closeSelector();
             }
           }}
           onKeyDown={(event) => {
-            if (hasExistingSelection && event.key === "Escape") {
+            if ((hasExistingSelection || outlets.length === 0) && event.key === "Escape") {
               closeSelector();
             }
           }}
@@ -46,7 +53,15 @@ export function OutletSelector() {
             </p>
 
             <div className="outlet-grid">
-              {outlets.map((outlet) => (
+              {isLoadingOutlets ? (
+                <p className="hero-text">Loading outlets...</p>
+              ) : outletError ? (
+                <p className="hero-text">{outletError}</p>
+              ) : outlets.length === 0 ? (
+                <p className="hero-text">
+                  No public outlets are configured yet.
+                </p>
+              ) : outlets.map((outlet) => (
                 <motion.button
                   key={outlet.id}
                   type="button"
