@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { OutletProvider } from "@/context/OutletContext";
+import { OutletGate } from "@/components/outlet/OutletGate";
+import { AuthProvider } from "@/features/auth/AuthContext";
 import { AppShell } from "@/layouts/AppShell";
 import "./globals.css";
 
@@ -18,7 +21,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider>
-          <AppShell>{children}</AppShell>
+          <AuthProvider>
+            <OutletProvider>
+              <OutletGate>
+                <AppShell>{children}</AppShell>
+              </OutletGate>
+            </OutletProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

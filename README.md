@@ -2,6 +2,23 @@
 
 Cubed is a web application for retail shops that rent out cube spaces or shelf spaces to individual merchants. Merchants place products in the physical store, customers browse those products online, and orders are reserved for in-store pickup and payment.
 
+## Test Accounts
+
+The most reliable setup is:
+
+1. Create these users manually in Supabase Authentication:
+   - `superadmin@cubed.test`
+   - `merchant@cubed.test`
+2. Copy their user UUIDs from Supabase Auth.
+3. Open [supabase/seed_test_profiles.sql](/Users/Shaneen/Cubed/supabase/seed_test_profiles.sql).
+4. Replace the two placeholder UUIDs with the real Auth user IDs.
+5. Run that SQL in the Supabase SQL editor.
+
+Recommended test credentials when creating the Auth users:
+
+- Super admin: `superadmin@cubed.test` / `SuperAdmin123!`
+- Merchant: `merchant@cubed.test` / `Merchant123!`
+
 This project is designed around a simple operational model:
 
 - Store owners manage the overall shop and merchant accounts.
